@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
-import { Home } from '../pages/index'
+import { Home, Signin } from '../pages/index'
 
 export const router = createBrowserRouter([
   {
@@ -10,6 +10,11 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />
+      },
+      {
+        path: '/sign-in',
+        caseSensitive: true,
+        element: <Signin />
       }
     ]
   }
