@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-
+import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUser, storeUserData, updateUserData } from '../../features/userSlice'
 
 import { ButtonStyled } from '../../components/Button/Button'
 import { InputStyled } from '../../components/Forms/styles'
@@ -9,72 +8,52 @@ import { InputStyled } from '../../components/Forms/styles'
 import { ContainerStyled, Title1Styled, FormUserEditStyled } from './styles'
 
 import Account from '../../components/Account/Account'
+import { authenticated } from '../../features/authSlice'
+import { fetchUserProfile, updateUserProfile } from '../../features/userSlice'
+import { getUser } from '../../features/userSlice'
 
+/**
+ * Component to display the user profile page
+ * Only access if the user is logged
+ *
+ * @returns <Profile />
+ */
 export default function Profile() {
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [isEditActive, setEditActive] = useState(false)
 
-  const user = useSelector(getUser)
+  const navigate = useNavigate()
+
   const dispatch = useDispatch()
+  const isAuthenticated = useSelector(authenticated)
+  const user = useSelector(getUser)
 
   useEffect(() => {
+    if(isAuthenticated === false) {
+      navigate('/')
+    }
 
-      fetch('http://localhost:3001/api/v1/user/profile', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer '+user.token
-        }
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-
-        if(responseJson.status !== 200) {
-          return null
-        }
-
-        const userData = responseJson?.body
-
-        if(userData?.id === undefined) {
-          return null
-        }
-
-        dispatch(storeUserData(userData))
-
-        setFirstName(userData.firstName)
-        setLastName(userData.lastName)
-      })
-  }, [user, dispatch])
+    if(isAuthenticated === true && user.id === null) {
+      dispatch(fetchUserProfile())
+    }
+  }, [isAuthenticated, user, navigate, dispatch])
 
   function handleEditActive() {
     setEditActive(isEditActive === false)
+    setFirstName(user.firstName)
+    setLastName(user.lastName)
   }
 
   function handleEditUser(event) {
     event.preventDefault()
 
-    const userData = {
+    const userDataToUpdate = {
       firstName, lastName
     }
 
-    fetch('http://localhost:3001/api/v1/user/profile', {
-      method: 'put',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+user.token
-      },
-      body: JSON.stringify(userData)
-    })
-    .then(response => response.json())
-    .then(responseJson => {
-      if(responseJson.status === 200) {
-        const userData = { firstName, lastName }
-
-        dispatch(updateUserData(userData))
-      }
-    })
+    dispatch(updateUserProfile(userDataToUpdate))
   }
 
   function handleCancelEditUser(event) {
@@ -84,8 +63,6 @@ export default function Profile() {
     setLastName(user.lastName)
   }
 
-
-  // dev data
   const accountAmount = [
     {
       title: 'Argent Bank Checking (x8349)',
@@ -103,7 +80,6 @@ export default function Profile() {
       description: 'Current Balance'
     }
   ]
-
 
   return (
     <main className="main bg-dark">
@@ -134,7 +110,7 @@ export default function Profile() {
 
 
       {
-        accountAmount.map((props, index) => <Account { ...props } />)
+        accountAmount.map((props, index) => <Account key={ index } { ...props } />)
       }
     </main>
   )

@@ -1,5 +1,10 @@
 import { HeroContainerStyled, HeroContentStyled, HeroParagrapheSubTitleStyled, HeroParagrapheTextStyled } from './styles'
 
+/**
+ * Component to display informations about account
+ *
+ * @returns <Hero />
+ */
 export default function Hero() {
   return (
     <HeroContainerStyled>

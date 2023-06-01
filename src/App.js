@@ -4,11 +4,10 @@ import './App.css'
 import { useState } from 'react'
 
 function App() {
-  const [user, setUser] = useState({ isLogged: false, token: null })
 
   return (
     <>
-      <Navigation user={ user } />
+      <Navigation />
 
       <Outlet />
 

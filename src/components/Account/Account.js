@@ -1,12 +1,17 @@
 import { AccountStyled, AccountAmountStyled, AccountAmountDescriptionStyled, AccountTitleStyled, AccountContentWrapperStyled } from './styles'
 import { ButtonStyled } from '../Button/Button'
 
+/**
+ * Component to display the informations of an transaction
+ *
+ * @param {Object} props
+ * @param {string} props.title
+ * @param {string} props.amount
+ * @param {string} props.description
+ * @returns <Acount />
+ */
 export default function Account(props) {
   const { title, amount, description } = props
-
-  function handleViewTransactions(event) {
-    alert('view transactions')
-  }
 
   return (
     <AccountStyled>
@@ -26,7 +31,7 @@ export default function Account(props) {
       {/* <!-- account content wrapper cta --> */}
 
       <AccountContentWrapperStyled>
-        <ButtonStyled onClick={ handleViewTransactions }>View transactions</ButtonStyled>
+        <ButtonStyled>View transactions</ButtonStyled>
       </AccountContentWrapperStyled>
     </AccountStyled>
   )

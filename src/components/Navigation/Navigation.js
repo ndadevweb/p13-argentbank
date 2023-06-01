@@ -1,13 +1,32 @@
-import argentBankLogo from '../../assets/logo/argentBankLogo.png'
-import { NavStyled, LinkLogoStyled, LinkSignInStyled, ImgLogoStyled } from './styles'
-
-import { getUser, signout } from '../../features/userSlice'
+import { authenticated, clearAuth } from '../../features/authSlice'
+import { getUser, clearUser, fetchUserProfile } from '../../features/userSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
+import argentBankLogo from '../../assets/logo/argentBankLogo.png'
+import { NavStyled, LinkLogoStyled, LinkSignInStyled, ImgLogoStyled } from './styles'
+import { useEffect } from 'react'
+
+/**
+ * Component to display website navigation and user's informations
+ *
+ * @returns <Navigation />
+ */
 export default function Navigation() {
 
-  const user = useSelector(getUser)
   const dispatch = useDispatch()
+  const isAuthenticated = useSelector(authenticated)
+  const user = useSelector(getUser)
+
+  useEffect(() => {
+    if(isAuthenticated && user.id === null) {
+      dispatch(fetchUserProfile())
+    }
+  }, [isAuthenticated, dispatch, user])
+
+  function logout() {
+    dispatch(clearAuth())
+    dispatch(clearUser())
+  }
 
   return (
     <NavStyled>
@@ -17,7 +36,7 @@ export default function Navigation() {
       </LinkLogoStyled>
 
       {
-        user.isLogged === false ? (
+        isAuthenticated === false ? (
           <div>
             <LinkSignInStyled to="/login">
               <i className="fa fa-user-circle"></i> Sign In
@@ -30,9 +49,9 @@ export default function Navigation() {
             </LinkSignInStyled>
             <LinkSignInStyled
               to="/"
-              onClick={ () => dispatch(signout()) }
+              onClick={ () => logout() }
             >
-            <i class="fa fa-sign-out"></i> Sign Out
+            <i className="fa fa-sign-out"></i> Sign Out
             </LinkSignInStyled>
           </div>
         )

@@ -3,6 +3,11 @@ import iconChat from '../../assets/icons/icon-chat.png'
 import iconMoney from '../../assets/icons/icon-money.png'
 import iconSecurity from '../../assets/icons/icon-security.png'
 
+/**
+ * Component to display features
+ *
+ * @returns <Feature />
+ */
 export default function Features() {
 
   return (

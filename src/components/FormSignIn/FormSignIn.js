@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   SignInContentStyled,
   SignInIconStyled,
@@ -7,52 +7,56 @@ import {
   ButtonSubmitStyled
 } from './styles'
 import { useNavigate } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { authenticate, authenticated, authenticationError } from '../../features/authSlice'
 
-import { useDispatch } from 'react-redux'
-import { authenticated } from '../../features/userSlice'
-
-
+/**
+ * Component to display and manage user signin
+ *
+ * @returns <FormSignIn />
+ */
 export default function FormSignIn() {
   const navigate = useNavigate()
 
-  const [username, setUsername] = useState('')
+  const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
   const dispatch = useDispatch()
+  const isAuthenticated = useSelector(authenticated)
+  const error = useSelector(authenticationError)
 
-  async function handleSubmit(event) {
+  useEffect(() => {
+    if(isAuthenticated === true) {
+      navigate('/profile')
+    }
+  }, [navigate, isAuthenticated])
+
+  /**
+   * Handle signin
+   *
+   * @param {Event} event
+   */
+  function handleSubmit(event) {
     event.preventDefault()
 
+    const authInformations = {
+      login, password, rememberMe
+    }
 
-    // DEV LOGIN
-    await fetch('http://localhost:3001/api/v1/user/login', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: username, password
-      })
-    })
-    .then(response => response.json())
-    .then(responseJson => {
-      const isLogged = responseJson.status === 200
-
-      if(isLogged === true) {
-        dispatch(authenticated(responseJson.body.token))
-        navigate('/profile')
-      }
-
-
-    })
-    .catch(error => console.log(error))
+    dispatch(authenticate(authInformations))
   }
 
+  /**
+   * Handle update fields
+   *
+   * @param {Event} event
+   * @returns null
+   */
   function handleChangeField(event) {
     switch(event.target.name) {
       case 'username':
-        setUsername(event.target.value)
+        setLogin(event.target.value)
         break
 
       case 'password':
@@ -64,8 +68,10 @@ export default function FormSignIn() {
         break
 
       default:
-
+        return null
     }
+
+    return null
   }
 
   return (
@@ -73,6 +79,7 @@ export default function FormSignIn() {
       <SignInIconStyled className="fa fa-user-circle"></SignInIconStyled>
       <h1>Sign In</h1>
       <form autoComplete="off" onSubmit={ handleSubmit }>
+        { error !== null && error }
         <InputWrapperStyled>
           <label htmlFor="username">Username</label>
           <input type="text" id="username" name="username" onInput={ handleChangeField } />

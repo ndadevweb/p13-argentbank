@@ -1,7 +1,11 @@
 import { FormSignIn } from '../../components'
 
-export default function Signin(props) {
-
+/**
+ * Component to display signin page
+ *
+ * @returns <Signin />
+ */
+export default function Signin() {
 
   return (
     <main className="main bg-dark">

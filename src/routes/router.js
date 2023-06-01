@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
-import { Home, Signin, Profile, Transactions } from '../pages/index'
+import { Home, Signin, Profile } from '../pages/index'
 
 export const router = createBrowserRouter([
   {
@@ -22,11 +22,6 @@ export const router = createBrowserRouter([
         caseSensitive: true,
         element: <Profile />
       },
-      {
-        path: '/transactions',
-        caseSensitive: true,
-        element: <Transactions />
-      }
       // {
       //   path: '*', element: <ErrorPage />
       // }
