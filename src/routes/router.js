@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
-import { Home, Signin, Profile } from '../pages/index'
+import { Home, Signin, Profile, Error } from '../pages/index'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    // errorElement: <ErrorPage />,
+    errorElement: <Error />,
     children: [
       {
         index: true,
@@ -22,9 +22,9 @@ export const router = createBrowserRouter([
         caseSensitive: true,
         element: <Profile />
       },
-      // {
-      //   path: '*', element: <ErrorPage />
-      // }
+      {
+        path: '*', element: <Error />
+      }
     ]
   }
 ])
