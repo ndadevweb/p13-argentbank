@@ -67,7 +67,11 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.isAuthenticated = false
       state.token = null
+      state.error = null
       localStorage.removeItem('auth')
+    },
+    clearErrorAuth: (state) => {
+      state.error = null
     },
     refresh: (state, action) => {
       state.isAuthenticated = true
@@ -99,6 +103,6 @@ export const authenticated = (state) => state.auth.isAuthenticated
 
 export const authenticationError = (state) => state.auth.error
 
-export const { clearAuth, refresh } = authSlice.actions
+export const { clearAuth, clearErrorAuth, refresh } = authSlice.actions
 
 export default authSlice.reducer

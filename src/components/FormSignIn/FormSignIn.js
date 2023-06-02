@@ -6,9 +6,10 @@ import {
   InputRememberStyled,
   ButtonSubmitStyled
 } from './styles'
+import { AlertStyled } from '../Alert/Alert'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { authenticate, authenticated, authenticationError } from '../../features/authSlice'
+import { authenticate, authenticated, authenticationError, clearErrorAuth } from '../../features/authSlice'
 
 /**
  * Component to display and manage user signin
@@ -31,6 +32,10 @@ export default function FormSignIn() {
       navigate('/profile')
     }
   }, [navigate, isAuthenticated])
+
+  useEffect(() => {
+    dispatch(clearErrorAuth())
+  }, [dispatch])
 
   /**
    * Handle signin
@@ -79,7 +84,9 @@ export default function FormSignIn() {
       <SignInIconStyled className="fa fa-user-circle"></SignInIconStyled>
       <h1>Sign In</h1>
       <form autoComplete="off" onSubmit={ handleSubmit }>
-        { error !== null && error }
+        {
+          error !== null && <AlertStyled>{ error }</AlertStyled>
+        }
         <InputWrapperStyled>
           <label htmlFor="username">Username</label>
           <input type="text" id="username" name="username" onInput={ handleChangeField } />
