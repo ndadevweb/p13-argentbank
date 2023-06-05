@@ -1,13 +1,22 @@
-import styled from 'styled-components'
+import classes from './Button.module.css'
 
-export const ButtonStyled = styled.button`
-  display: block;
-  // width: 100%;
-  padding: 8px;
-  // font-size: 1.1rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  border-color: #00bc77;
-  background-color: #00bc77;
-  color: #fff;
-`
+/**
+ * Component to display button
+ *
+ * @param {Object} props
+ * @param {String} props.text
+ *
+ * @returns <Button text="..." />
+ */
+export default function Button(props) {
+  const { text, handleClick } = props
+
+  return (
+    <button
+      className={ classes.btn }
+      onClick={ handleClick }
+    >
+      { text }
+    </button>
+  )
+}

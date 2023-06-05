@@ -1,5 +1,5 @@
-import { AccountStyled, AccountAmountStyled, AccountAmountDescriptionStyled, AccountTitleStyled, AccountContentWrapperStyled } from './styles'
-import { ButtonStyled } from '../Button/Button'
+import classes from './Account.module.css'
+import { Button } from '../'
 
 /**
  * Component to display the informations of an transaction
@@ -8,31 +8,24 @@ import { ButtonStyled } from '../Button/Button'
  * @param {string} props.title
  * @param {string} props.amount
  * @param {string} props.description
+ *
  * @returns <Acount />
  */
 export default function Account(props) {
   const { title, amount, description } = props
 
   return (
-    <AccountStyled>
-      <AccountContentWrapperStyled>
-        <AccountTitleStyled>
-          { title }
-        </AccountTitleStyled>
+    <section className={ classes.container }>
+      <div className={ classes.item }>
+        <h3 className={ classes.title }>{ title }</h3>
 
-        <AccountAmountStyled>
-          { amount }
-        </AccountAmountStyled>
+        <p className={ classes.amount }>{ amount }</p>
+        <p className={ classes.description }>{ description }</p>
+      </div>
 
-        <AccountAmountDescriptionStyled>
-          { description }
-        </AccountAmountDescriptionStyled>
-      </AccountContentWrapperStyled>
-      {/* <!-- account content wrapper cta --> */}
-
-      <AccountContentWrapperStyled>
-        <ButtonStyled>View transactions</ButtonStyled>
-      </AccountContentWrapperStyled>
-    </AccountStyled>
+      <div className={ classes.item+' '+classes.centerRight }>
+        <Button text="View transactions" />
+      </div>
+    </section>
   )
 }

@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react'
-import {
-  SignInContentStyled,
-  SignInIconStyled,
-  InputWrapperStyled,
-  InputRememberStyled,
-  ButtonSubmitStyled
-} from './styles'
-import { AlertStyled } from '../Alert/Alert'
+import { Alert } from '../'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { authenticate, authenticated, authenticationError, clearErrorAuth } from '../../features/authSlice'
+import classes from './FormSignIn.module.css'
 
 /**
  * Component to display and manage user signin
@@ -80,30 +74,30 @@ export default function FormSignIn() {
   }
 
   return (
-    <SignInContentStyled>
-      <SignInIconStyled className="fa fa-user-circle"></SignInIconStyled>
+    <section className={ classes.container }>
+      <i className={ `fa fa-user-circle ${ classes.signInIcon }` }></i>
       <h1>Sign In</h1>
       <form autoComplete="off" onSubmit={ handleSubmit }>
-        {
-          error !== null && <AlertStyled>{ error }</AlertStyled>
-        }
-        <InputWrapperStyled>
+
+        { error !== null ? <Alert text={ error } /> : null }
+
+        <div className={ classes.wrapperField }>
           <label htmlFor="username">Username</label>
           <input type="text" id="username" name="username" onInput={ handleChangeField } />
-        </InputWrapperStyled>
+        </div>
 
-        <InputWrapperStyled>
+        <div className={ classes.wrapperField }>
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" onInput={ handleChangeField } />
-        </InputWrapperStyled>
+        </div>
 
-        <InputRememberStyled>
+        <div className={ classes.wrapperRememberMe }>
             <input type="checkbox" id="remember-me" name="rememberMe" onChange={ handleChangeField } />
             <label htmlFor="remember-me">Remember me</label>
-        </InputRememberStyled>
+        </div>
 
-        <ButtonSubmitStyled>Sign In</ButtonSubmitStyled>
+        <button type="submit" className={ classes.btnSubmit }>Sign In</button>
       </form>
-    </SignInContentStyled>
+    </section>
   )
 }

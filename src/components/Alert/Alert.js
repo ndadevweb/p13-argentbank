@@ -1,12 +1,18 @@
-import styled from 'styled-components'
+import classes from './Alert.module.css'
 
-export const AlertStyled = styled.div`
-  margin: 20px 0;
-  padding: 15px 8px;
-  border-radius: 2px;
-  background: #BA181B;
-  color: #FFF;
-  font-size: 0.9rem;
-  font-weight: bold;
-  line-height: 1.5rem;
-`
+/**
+ * Component to display an alert message
+ *
+ * @param {Object} props
+ * @param {String} props.text
+ * @param {String} props.type (success, error)
+ *
+ * @returns <Alert text="..." />
+ */
+export default function Alert(props) {
+  const { text, type } = props
+
+  return (
+    <div className={ classes.alert }>{ text }</div>
+  )
+}

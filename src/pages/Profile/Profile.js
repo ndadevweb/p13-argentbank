@@ -2,15 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { ButtonStyled } from '../../components/Button/Button'
-import { InputStyled } from '../../components/Forms/styles'
+import { Account, Button } from '../../components/'
 
-import { ContainerStyled, Title1Styled, FormUserEditStyled } from './styles'
-
-import Account from '../../components/Account/Account'
 import { authenticated } from '../../features/authSlice'
 import { fetchUserProfile, updateUserProfile } from '../../features/userSlice'
 import { getUser } from '../../features/userSlice'
+
+import classes from './Profile.module.css'
 
 /**
  * Component to display the user profile page
@@ -40,15 +38,19 @@ export default function Profile() {
     }
   }, [isAuthenticated, user, navigate, dispatch])
 
+  /**
+   * Display / Edit form to edit user's informations
+   */
   function handleEditActive() {
     setEditActive(isEditActive === false)
     setFirstName(user.firstName)
     setLastName(user.lastName)
   }
 
-  function handleEditUser(event) {
-    event.preventDefault()
-
+  /**
+   * Handle to Update user's informations
+   */
+  function handleEditUser() {
     const userDataToUpdate = {
       firstName, lastName
     }
@@ -56,9 +58,11 @@ export default function Profile() {
     dispatch(updateUserProfile(userDataToUpdate))
   }
 
-  function handleCancelEditUser(event) {
-    event.preventDefault()
-
+  /**
+   * Reset user's informations only
+   * before validation
+   */
+  function handleCancelEditUser() {
     setFirstName(user.firstName)
     setLastName(user.lastName)
   }
@@ -83,35 +87,32 @@ export default function Profile() {
 
   return (
     <main className="main bg-dark">
-      <ContainerStyled>
-        <Title1Styled>
+      <header className={ classes.container }>
+        <h1>
           Welcome back<br />
           { user.firstName } { user.lastName }
-        </Title1Styled>
-        <ButtonStyled onClick={ handleEditActive }>Edit Name</ButtonStyled>
+        </h1>
+
+        <Button text="Edit Name" handleClick={ handleEditActive } />
 
         {
           isEditActive === false
             ? null
             : (
-              <FormUserEditStyled>
-                  <InputStyled type="text" className="profilFirstName" value={ firstName } onInput={ (event) => setFirstName(event.target.value) } />
-                  <InputStyled type="text" className="profilLastName" value={ lastName } onInput={ (event) => setLastName(event.target.value) } />
+              <form className={ classes.formEdit } onSubmit={ (event) => event.preventDefault() }>
+                <input type="text" className={ classes.profileFirstName } value={ firstName } onInput={ (event) => setFirstName(event.target.value) } />
+                <input type="text" className={ classes.profileLastName } value={ lastName } onInput={ (event) => setLastName(event.target.value) } />
 
-                  <ButtonStyled className="save" onClick={ handleEditUser }>Save</ButtonStyled>
-                  <ButtonStyled className="cancel" onClick={ handleCancelEditUser }>Cancel</ButtonStyled>
-              </FormUserEditStyled>
+                <Button handleClick={ handleEditUser } text="Save" />
+                <Button handleClick={ handleCancelEditUser } text="Cancel" />
+              </form>
             )
         }
-      </ContainerStyled>
+      </header>
 
       {/* <h2 className="sr-only">Accounts</h2> */}
 
-
-
-      {
-        accountAmount.map((props, index) => <Account key={ index } { ...props } />)
-      }
+      { accountAmount.map((props, index) => <Account key={ index } { ...props } />) }
     </main>
   )
 }

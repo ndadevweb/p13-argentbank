@@ -1,4 +1,4 @@
-import { FooterStyled, FooterTextStyled } from "./styles"
+import classes from './Footer.module.css'
 
 /**
  * Component to display website footer
@@ -7,8 +7,8 @@ import { FooterStyled, FooterTextStyled } from "./styles"
  */
 export default function Footer() {
   return (
-    <FooterStyled>
-      <FooterTextStyled>Copyright 2020 Argent Bank</FooterTextStyled>
-    </FooterStyled>
+    <footer className={ classes.footer }>
+      <p>Copyright 2020 Argent Bank</p>
+    </footer>
   )
 }

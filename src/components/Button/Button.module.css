@@ -1,0 +1,9 @@
+.btn {
+  display: block;
+  padding: 8px;
+  font-weight: bold;
+  margin-top: 1rem;
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+}

@@ -1,3 +1,6 @@
+export { default as Account } from './Account/Account'
+export { default as Alert } from './Alert/Alert'
+export { default as Button } from './Button/Button'
 export { default as Navigation } from './Navigation/Navigation'
 export { default as Hero } from './Hero/Hero'
 export { default as Features } from './Features/Features'

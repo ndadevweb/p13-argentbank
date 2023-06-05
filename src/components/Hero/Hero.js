@@ -1,4 +1,4 @@
-import { HeroContainerStyled, HeroContentStyled, HeroParagrapheSubTitleStyled, HeroParagrapheTextStyled } from './styles'
+import classes from './Hero.module.css'
 
 /**
  * Component to display informations about account
@@ -7,14 +7,14 @@ import { HeroContainerStyled, HeroContentStyled, HeroParagrapheSubTitleStyled, H
  */
 export default function Hero() {
   return (
-    <HeroContainerStyled>
-      <HeroContentStyled>
+    <div className={ classes.container }>
+      <section className={ classes.hero }>
         <h2 className="sr-only">Promoted Content</h2>
-        <HeroParagrapheSubTitleStyled>No fees.</HeroParagrapheSubTitleStyled>
-        <HeroParagrapheSubTitleStyled>No minimum deposit.</HeroParagrapheSubTitleStyled>
-        <HeroParagrapheSubTitleStyled>High interest rates.</HeroParagrapheSubTitleStyled>
-        <HeroParagrapheTextStyled>Open a savings account with Argent Bank today!</HeroParagrapheTextStyled>
-      </HeroContentStyled>
-    </HeroContainerStyled>
+        <p className={ classes.subtitle }>No fees.</p>
+        <p className={ classes.subtitle }>No minimum deposit.</p>
+        <p className={ classes.subtitle }>High interest rates.</p>
+        <p className={ classes.text }>Open a savings account with Argent Bank today!</p>
+      </section>
+    </div>
   )
 }
