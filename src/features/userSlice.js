@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { clearAuth } from './authSlice'
 
 const URL_USER_PROFILE = 'http://localhost:3001/api/v1/user/profile'
 
@@ -7,24 +8,16 @@ const headers = (token) => ({
   'Authorization': 'Bearer '+token
 })
 
-const throwExceptionIfNotAuthenticated = (isAuthenticated) => {
-  if(isAuthenticated === false ) {
-    throw new Error('You must be authenticated')
-  }
-}
-
 /**
  * Handle informations about of the user's profile
  */
 export const fetchUserProfile = createAsyncThunk(
   'user/fetchUserProfile',
-  async (_, { getState }) => {
+  async (_, { getState, dispatch, rejectWithValue }) => {
     const { auth } = getState()
-    const { authenticated, token } = auth
+    const { token } = auth
 
     try {
-      throwExceptionIfNotAuthenticated(authenticated)
-
       const config = {
         method: 'post',
         headers: headers(token)
@@ -33,6 +26,10 @@ export const fetchUserProfile = createAsyncThunk(
       const response = await fetch(URL_USER_PROFILE, config)
 
       if(response.ok === false) {
+        if(response.status === 401) {
+          dispatch(clearAuth())
+        }
+
         throw new Error('Fetch user profile failed')
       }
 
@@ -40,7 +37,7 @@ export const fetchUserProfile = createAsyncThunk(
 
       return userProfile.body
     } catch(error) {
-      return error
+      return rejectWithValue(error.message)
     }
   }
 )
@@ -50,13 +47,11 @@ export const fetchUserProfile = createAsyncThunk(
  */
 export const updateUserProfile = createAsyncThunk(
   'auth/updateUserProfile',
-  async (newUserData, { getState }) => {
+  async (newUserData, { getState, dispatch, rejectWithValue }) => {
     const { auth } = getState()
-    const { authenticated, token } = auth
+    const { token } = auth
 
     try {
-      throwExceptionIfNotAuthenticated(authenticated)
-
       const config = {
         method: 'put',
         headers: headers(token),
@@ -66,6 +61,10 @@ export const updateUserProfile = createAsyncThunk(
       const response = await fetch(URL_USER_PROFILE, config)
 
       if(response.ok === false) {
+        if(response.status === 401) {
+          dispatch(clearAuth())
+        }
+
         throw new Error('Update user profile failed')
       }
 
@@ -73,7 +72,7 @@ export const updateUserProfile = createAsyncThunk(
 
       return userInformations.body
     } catch(error) {
-      return error
+      return rejectWithValue(error.message)
     }
   }
 )
@@ -122,8 +121,9 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.error.message
+        state.error = action.payload
       })
+
 
       .addCase(updateUserProfile.pending, (state) => {
         state.isLoading = true
@@ -149,6 +149,8 @@ const userSlice = createSlice({
 })
 
 export const getUser = (state) => state.user
+
+export const getUserError = (state) => state.user.error
 
 export const { clearUser } = userSlice.actions
 

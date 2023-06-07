@@ -19,11 +19,12 @@ export default function Navigation() {
   const user = useSelector(getUser)
 
   useEffect(() => {
-    if(isAuthenticated && user.id === null) {
-      dispatch(fetchUserProfile())
-    }
-  }, [isAuthenticated, dispatch, user])
+    dispatch(fetchUserProfile())
+  }, [isAuthenticated, dispatch])
 
+  /**
+   * Clear data from redux store
+   */
   function logout() {
     dispatch(clearAuth())
     dispatch(clearUser())

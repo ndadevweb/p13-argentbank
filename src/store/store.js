@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from '../features/userSlice'
 import authReducer from '../features/authSlice'
-import { checkTokenFromLocalStorage } from '../features/authSlice'
+import { initializeAuthentication } from '../features/authSlice'
 
 const store = configureStore({
   reducer: {
@@ -10,6 +10,6 @@ const store = configureStore({
   },
 })
 
-store.dispatch(checkTokenFromLocalStorage());
+store.dispatch(initializeAuthentication());
 
 export default store

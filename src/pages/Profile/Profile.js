@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Account, Button } from '../../components/'
+import { Account, Alert, Button } from '../../components/'
 
 import { authenticated } from '../../features/authSlice'
-import { fetchUserProfile, updateUserProfile } from '../../features/userSlice'
-import { getUser } from '../../features/userSlice'
+import { getUser, getUserError, fetchUserProfile, updateUserProfile } from '../../features/userSlice'
 
 import classes from './Profile.module.css'
 
@@ -27,16 +26,17 @@ export default function Profile() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(authenticated)
   const user = useSelector(getUser)
+  const userError = useSelector(getUserError)
 
   useEffect(() => {
     if(isAuthenticated === false) {
       navigate('/')
     }
 
-    if(isAuthenticated === true && user.id === null) {
+    if(isAuthenticated === true) {
       dispatch(fetchUserProfile())
     }
-  }, [isAuthenticated, user, navigate, dispatch])
+  }, [isAuthenticated, dispatch, navigate])
 
   /**
    * Display / Edit form to edit user's informations
@@ -88,6 +88,10 @@ export default function Profile() {
   return (
     <main className="main bg-dark">
       <header className={ classes.container }>
+        {
+          userError === null ? null : <Alert text={ userError } />
+        }
+
         <h1>
           Welcome back<br />
           { user.firstName } { user.lastName }

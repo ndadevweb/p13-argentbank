@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
  */
 export const authenticate = createAsyncThunk(
   'auth/authenticate',
-  async ( { login, password, rememberMe = false } ) => {
+  async ( { login, password, rememberMe = false }, { rejectWithValue } ) => {
     const url = 'http://localhost:3001/api/v1/user/login'
 
     const config = {
@@ -35,22 +35,23 @@ export const authenticate = createAsyncThunk(
 
       return token
     } catch(error) {
-      throw error
+      return rejectWithValue(error.message)
     }
-  }
+   }
 )
 
 /**
  * Handle to check if JSON Web Token exists and update state
  * only if the JWT exists in local storage and the state is empty
  */
-export const checkTokenFromLocalStorage = createAsyncThunk(
-  'auth/checkTokenFromLocalStorage',
+export const initializeAuthentication = createAsyncThunk(
+  'auth/initializeAuthentication',
   async (_, { dispatch }) => {
     const token = localStorage.getItem('auth')
 
-    if (token !== null) {
-      dispatch(refresh(token))
+    if(token !== null) {
+      const payload = { token, isAuthenticated: true }
+      dispatch(refreshAuth(payload))
     }
   }
 )
@@ -73,9 +74,9 @@ const authSlice = createSlice({
     clearErrorAuth: (state) => {
       state.error = null
     },
-    refresh: (state, action) => {
-      state.isAuthenticated = true
-      state.token = action.payload
+    refreshAuth: (state, action) => {
+      state.isAuthenticated = action.payload.isAuthenticated
+      state.token = action.payload.token
     }
   },
   extraReducers: (builder) => {
@@ -94,7 +95,7 @@ const authSlice = createSlice({
       .addCase(authenticate.rejected, (state, action) => {
         state.isLoading = false
         state.isAuthenticated = false
-        state.error = action.error.message
+        state.error = action.payload
       })
   }
 })
@@ -103,6 +104,6 @@ export const authenticated = (state) => state.auth.isAuthenticated
 
 export const authenticationError = (state) => state.auth.error
 
-export const { clearAuth, clearErrorAuth, refresh } = authSlice.actions
+export const { clearAuth, clearErrorAuth, refreshAuth } = authSlice.actions
 
 export default authSlice.reducer
