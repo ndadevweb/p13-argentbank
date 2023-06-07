@@ -20,6 +20,7 @@ export default function Profile() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [isEditActive, setEditActive] = useState(false)
+  const [isValidForm, setIsValidForm] = useState(true)
 
   const navigate = useNavigate()
 
@@ -38,6 +39,10 @@ export default function Profile() {
     }
   }, [isAuthenticated, dispatch, navigate])
 
+  useEffect(() => {
+    setIsValidForm(firstName !== '' && lastName !== '')
+  }, [firstName, lastName, setIsValidForm])
+
   /**
    * Display / Edit form to edit user's informations
    */
@@ -45,6 +50,27 @@ export default function Profile() {
     setEditActive(isEditActive === false)
     setFirstName(user.firstName)
     setLastName(user.lastName)
+  }
+
+  /**
+   * Handle form fields
+   *
+   * @param {Event} event
+   * @returns null
+   */
+  function handleFields(event) {
+    const value = event.target.value.trim()
+
+    switch(event.target.name) {
+      case 'firstName':
+        setFirstName(value)
+        break
+      case 'lastName':
+        setLastName(value)
+        break
+      default:
+        return null
+    }
   }
 
   /**
@@ -104,10 +130,10 @@ export default function Profile() {
             ? null
             : (
               <form className={ classes.formEdit } onSubmit={ (event) => event.preventDefault() }>
-                <input type="text" className={ classes.profileFirstName } value={ firstName } onInput={ (event) => setFirstName(event.target.value) } />
-                <input type="text" className={ classes.profileLastName } value={ lastName } onInput={ (event) => setLastName(event.target.value) } />
+                <input type="text" name="firstName" className={ classes.profileFirstName } value={ firstName } onInput={ (event) => handleFields(event) } />
+                <input type="text" name="lastName" className={ classes.profileLastName } value={ lastName } onInput={ (event) => handleFields(event) } />
 
-                <Button handleClick={ handleEditUser } text="Save" />
+                <Button handleClick={ handleEditUser } text="Save" isDisabled={ isValidForm === false } />
                 <Button handleClick={ handleCancelEditUser } text="Cancel" />
               </form>
             )
