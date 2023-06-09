@@ -1,0 +1,309 @@
+swagger: "2.0"
+info:
+  title: ArgentBank transaction API documentation
+  description: API operation proposal for the Transaction part
+  termsOfService: http://swagger.io/terms/
+  version: 1.0.0
+host: localhost:3001
+basePath: /api/v1
+schemes:
+  - https
+  - http
+paths:
+  /user/{user_id}/transaction/month/current:
+    get:
+      tags:
+        - Transaction Module
+      summary: Retrieve a user's transactions for the current month
+      description: Retrieve all transactions for the current month, the user must be authenticated to fetch his transactions
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: path
+          name: user_id
+          description: User ID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User's transactions of the current month retrieved successully
+          schema:
+            $ref: "#/definitions/TransactionCurrentMonthResponse"
+        400:
+          description: Invalid Param
+        404:
+          description: Transactions was not found
+        500:
+          description: Internal Server Error
+
+  /user/{user_id}/transaction/{transaction_id}:
+    get:
+      tags:
+        - Transaction Module
+      summary: Retrieve a user's transaction
+      description: Retrieve a transaction by user id and transaction id
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: path
+          name: user_id
+          description: User ID
+          required: true
+          type: integer
+        - in: path
+          name: transaction_id
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User's transaction retrieved successully
+          schema:
+            $ref: "#/definitions/TransactionDetailResponse"
+        400:
+          description: Invalid Params
+        404:
+          description: Transaction was not found
+        500:
+          description: Internal Server Error
+
+  /user/transaction:
+    post:
+      tags:
+        - Transaction Module
+      summary: Create a new transaction
+      description: Create a new transaction and retrieve the created transaction informations
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Create transaction payload
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionCreate"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Transaction successfully created
+          schema:
+            $ref: "#/definitions/TransactionCreateAndUpdateResponse"
+        400:
+          description: Invalid Fields
+        500:
+          description: Internal Server Error
+    put:
+      tags:
+        - Transaction Module
+      summary: Update a transaction
+      description: Update the transaction BY ID and retrieve the transaction informations
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update transaction payload
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionUpdate"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Transaction successfully updated
+          schema:
+            $ref: "#/definitions/TransactionCreateAndUpdateResponse"
+        400:
+          description: Invalid Fields
+        404:
+          description: Transaction was not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Transaction Module
+      summary: Delete a transaction
+      description: Delete a transaction by transaction ID and retrieve the transaction ID
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update transaction payload
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionDelete"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Transaction successfully deleted
+          schema:
+            $ref: "#/definitions/TransactionDeleteResponse"
+        400:
+          description: Invalid Field
+        404:
+          description: Transaction was not found
+        500:
+          description: Internal Server Error
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+definitions:
+  TransactionCreate:
+    properties:
+      title:
+        type: string
+        description: Title of the transaction
+        example: Buy Phone
+      date:
+        type: string
+        description: Date of the transaction
+        example: "2023-06-06 11:00:00"
+      amount:
+        type: string
+        description: Amount about the transaction
+        example: 19,99€
+
+  TransactionUpdate:
+    properties:
+      transaction_id:
+        type: string
+        description: ID of the transaction
+        example: TR6G87FD84DSQ5GF654
+      title:
+        type: string
+        description: Title of the transaction
+        example: Buy Phone
+      date:
+        type: string
+        description: Date of the transaction
+        example: "2023-06-06 11:00:00"
+      amount:
+        type: string
+        description: Amount about the transaction
+        example: 19,99€
+
+  TransactionDelete:
+    properties:
+      transaction_id:
+        type: string
+        description: ID of the transaction
+        example: TR6G87FD84DSQ5GF654
+
+  TransactionCurrentMonthResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the transaction
+          example: TR6G87FD84DSQ5GF654
+        title:
+          type: string
+          description: Description about the transaction
+          example: Phone bill
+        date:
+          type: string
+          description: Date of the transaction
+          example: "2023-06-06 11:00:00"
+        amount:
+          type: string
+          description: Amount about the transaction
+          example: 19,99€
+        messageBalance:
+          type: string
+          description: Balance of the account
+          enum: [Available Balance, Current Balance]
+
+  TransactionDetailResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: ID of the transaction
+        example: TR6G87FD84DSQ5GF654
+      title:
+        type: string
+        description: Description about the transaction
+        example: Phone bill
+      date:
+        type: string
+        description: Date of the transaction
+        example: "2023-06-06 11:00:00"
+      amount:
+        type: string
+        description: Amount about the transaction
+        example: 19,99€
+      messageBalance:
+        type: string
+        description: Balance of the account
+        enum: [Available Balance, Current Balance]
+
+  TransactionCreateAndUpdateResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: ID of the transaction
+        example: TR6G87FD84DSQ5GF654
+      title:
+        type: string
+        description: Description about the transaction
+        example: Phone bill
+      date:
+        type: string
+        description: Date of the transaction
+        example: "2023-06-06 11:00:00"
+      amount:
+        type: string
+        description: Amount about the transaction
+        example: 19,99€
+      messageBalance:
+        type: string
+        description: Balance of the account
+        enum: [Available Balance, Current Balance]
+
+  TransactionDeleteResponse:
+    type: object
+    properties:
+      transaction_id:
+        type: string
+        description: ID of the transaction
+        example: TR6G87FD84DSQ5GF654
