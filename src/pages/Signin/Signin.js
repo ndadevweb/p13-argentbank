@@ -1,4 +1,5 @@
-import { FormSignIn } from '../../components'
+import { THEME_BG_DARK } from '../../components/Main/Main'
+import { Main, FormSignIn } from '../../components'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 /**
@@ -10,8 +11,8 @@ export default function Signin() {
   useDocumentTitle('Signin')
 
   return (
-    <main className="main bg-dark">
+    <Main theme={ THEME_BG_DARK }>
       <FormSignIn />
-    </main>
+    </Main>
   )
 }

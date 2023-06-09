@@ -6,9 +6,10 @@ import classes from './Hero.module.css'
  * @returns <Hero />
  */
 export default function Hero() {
+
   return (
-    <div className={ classes.container }>
-      <section className={ classes.hero }>
+    <div className={ classes.hero }>
+      <section className={ classes.heroContent }>
         <h2 className="sr-only">Promoted Content</h2>
         <p className={ classes.subtitle }>No fees.</p>
         <p className={ classes.subtitle }>No minimum deposit.</p>

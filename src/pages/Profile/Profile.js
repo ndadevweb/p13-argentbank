@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Account, Alert, Button } from '../../components/'
+import { THEME_BG_DARK } from '../../components/Main/Main'
+import { Main, Accounts, Alert, Button } from '../../components/'
 
 import { authenticated } from '../../features/authSlice'
 import { getUser, getUserError, fetchUserProfile, updateUserProfile } from '../../features/userSlice'
@@ -96,7 +97,7 @@ export default function Profile() {
     setLastName(user.lastName)
   }
 
-  const accountAmount = [
+  const accountInformations = [
     {
       title: 'Argent Bank Checking (x8349)',
       amount: '$2,082.79',
@@ -115,18 +116,11 @@ export default function Profile() {
   ]
 
   return (
-    <main className="main bg-dark">
-      <header className={ classes.container }>
-        {
-          userError === null ? null : <Alert text={ userError } />
-        }
+    <Main theme={ THEME_BG_DARK }>
+      <div className={ classes.header }>
+        <h1>Welcome back<br />{ user.firstName } { user.lastName }</h1>
 
-        <h1>
-          Welcome back<br />
-          { user.firstName } { user.lastName }
-        </h1>
-
-        <Button text="Edit Name" handleClick={ handleEditActive } />
+        <Button text="Edit Name" handleClick={ handleEditActive } cssClasses={ classes.editButton } />
 
         {
           isEditActive === false
@@ -141,11 +135,9 @@ export default function Profile() {
               </form>
             )
         }
-      </header>
+      </div>
 
-      {/* <h2 className="sr-only">Accounts</h2> */}
-
-      { accountAmount.map((props, index) => <Account key={ index } { ...props } />) }
-    </main>
+      <Accounts accountInformations={ accountInformations }/>
+    </Main>
   )
 }

@@ -10,6 +10,10 @@ body {
   margin: 0;
 }
 
+input[type="checkbox"], button, label {
+  cursor: pointer;
+}
+
 #root {
   display: flex;
   flex-direction: column;

@@ -9,16 +9,16 @@ import classes from './Feature.module.css'
  * @param {String} props.iconTitle
  * @param {String} props.iconText
  *
- * @returns <Feature />
+ * @returns <Feature iconSrc={ ... } iconAlt={ ... } title={ ... } text={ ... } />
  */
 export default function Feature(props) {
   const { iconSrc, iconAlt, title, text } = props
 
   return (
-    <article className={ classes.feature }>
-      <img src={ iconSrc } alt={ iconAlt } />
-      <h3>{ title }</h3>
+    <div className={ classes.featureItem }>
+      <img src={ iconSrc } alt={ iconAlt } className={ classes.featureIcon } />
+      <h3 className={ classes.featureItemTitle }>{ title }</h3>
       <p>{ text }</p>
-    </article>
+    </div>
   )
 }

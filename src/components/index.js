@@ -1,4 +1,5 @@
-export { default as Account } from './Account/Account'
+export { default as Main } from './Main/Main'
+export { default as Accounts } from './Accounts/Accounts'
 export { default as Alert } from './Alert/Alert'
 export { default as Button } from './Button/Button'
 export { default as Navigation } from './Navigation/Navigation'

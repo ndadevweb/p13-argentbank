@@ -7,19 +7,24 @@ import classes from './Button.module.css'
  * @param {String}   props.text
  * @param {Function} props.handleClick
  * @param {Boolean}  props.isDisabled
+ * @param {String}   props.type
+ * @param {String}   props.cssClasses
  *
  * @returns <Button text="..." handleClick={ ... } isDisabled={ ... } />
  */
 export default function Button(props) {
-  const { text, handleClick, isDisabled } = props
+  const { text, handleClick, isDisabled, type, cssClasses } = props
 
-  const classDisabled = isDisabled === true ? classes.btnDisabled : ''
+  const classDisabled = isDisabled === true ? classes.btnDisabled : null
+
+  const classesList = cssClasses ? cssClasses : classes.btn
 
   return (
     <button
-      className={ classes.btn+' '+classDisabled }
+      className={ classesList+' '+classDisabled }
       onClick={ handleClick }
       disabled={ isDisabled === true }
+      type={ type ? type : 'button' }
     >
       { text }
     </button>

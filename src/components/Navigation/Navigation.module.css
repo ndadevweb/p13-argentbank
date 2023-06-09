@@ -1,38 +1,38 @@
-.navigation {
+.mainNav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 20px;
 }
 
-.linkLogo {
+.mainNav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.mainNav a.routerLinkExactActive {
+  color: #42b983;
+}
+
+.mainNavItem {
+  text-decoration: none;
+  margin-right: 0.5rem;
+}
+
+.mainNavItem:hover {
+  text-decoration: underline;
+}
+
+.mainNavLogo {
   display: flex;
   align-items: center;
 }
 
-.linkLogo img {
+.mainNavLogoImage {
   max-width: 100%;
   width: 200px;
 }
 
-.navigation ul {
-  list-style: none;
-  display: flex;
-}
-
-.navigation a {
-  font-weight: bold;
-
-  text-decoration: none;
-  margin-right: 0.5rem;
-  color: #2c3e50;
-  /* color: #42b983; */
-}
-
-.navigation a:hover {
-  text-decoration: underline;
-}
-
-.navigation a.active {
-  color: #2c3e50;
+.mainNav i {
+  margin-right: 4px;
 }

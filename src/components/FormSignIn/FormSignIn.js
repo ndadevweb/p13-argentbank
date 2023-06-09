@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert } from '../'
+import { Alert, Button } from '../'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { authenticate, authenticated, authenticationError, clearErrorAuth } from '../../features/authSlice'
@@ -74,29 +74,29 @@ export default function FormSignIn() {
   }
 
   return (
-    <section className={ classes.container }>
+    <section className={ classes.signInContent }>
       <i className={ `fa fa-user-circle ${ classes.signInIcon }` }></i>
       <h1>Sign In</h1>
       <form autoComplete="off" onSubmit={ handleSubmit }>
 
         { error !== null ? <Alert text={ error } /> : null }
 
-        <div className={ classes.wrapperField }>
+        <div className={ classes.inputWrapper }>
           <label htmlFor="username">Username</label>
           <input type="text" id="username" name="username" onInput={ handleChangeField } />
         </div>
 
-        <div className={ classes.wrapperField }>
+        <div className={ classes.inputWrapper }>
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" onInput={ handleChangeField } />
         </div>
 
-        <div className={ classes.wrapperRememberMe }>
-            <input type="checkbox" id="remember-me" name="rememberMe" onChange={ handleChangeField } />
-            <label htmlFor="remember-me">Remember me</label>
+        <div className={ classes.inputRemember }>
+          <input type="checkbox" id="remember-me" name="rememberMe" onChange={ handleChangeField } />
+          <label htmlFor="remember-me">Remember me</label>
         </div>
 
-        <button type="submit" className={ classes.btnSubmit }>Sign In</button>
+        <Button text="Sign In" type="submit" cssClasses={ classes.signInButton } />
       </form>
     </section>
   )

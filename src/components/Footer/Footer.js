@@ -8,7 +8,7 @@ import classes from './Footer.module.css'
 export default function Footer() {
   return (
     <footer className={ classes.footer }>
-      <p>Copyright 2020 Argent Bank</p>
+      <p className={ classes.footerText }>Copyright 2020 Argent Bank</p>
     </footer>
   )
 }

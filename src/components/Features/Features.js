@@ -32,11 +32,10 @@ export default function Features() {
   ]
 
   return (
-    <section className={ classes.container }>
+    <section className={ classes.features }>
       <h2 className="sr-only">Features</h2>
 
-      { features.map((item, index) => <Feature { ...item } />) }
-
+      { features.map((item, index) => <Feature key={ index } { ...item } />) }
     </section>
   )
 }

@@ -19,7 +19,9 @@ export default function Navigation() {
   const user = useSelector(getUser)
 
   useEffect(() => {
-    dispatch(fetchUserProfile())
+    if(isAuthenticated === true) {
+      dispatch(fetchUserProfile())
+    }
   }, [isAuthenticated, dispatch])
 
   /**
@@ -31,36 +33,33 @@ export default function Navigation() {
   }
 
   return (
-    <nav className={ classes.navigation }>
-      <Link className={ classes.linkLogo } to="/">
-        <img src={ argentBankLogo } alt="Argent Bank Logo" />
+    <nav className={ classes.mainNav }>
+      <Link className={ classes.mainNavLogo } to="/">
+        <img src={ argentBankLogo } alt="Argent Bank Logo" className={ classes.mainNavLogoImage }/>
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
 
-      <ul>
+      <div>
         {
           isAuthenticated === false ? (
-              <li>
-                <Link to="/login">
-                  <i className="fa fa-user-circle"></i> Sign In
-                </Link>
-              </li>
+            <Link className={ classes.mainNavItem } to="/login">
+              <i className="fa fa-user-circle"></i> Sign In
+            </Link>
           ) : (
-              <>
-                <li>
-                  <Link to="/profile">
-                    <i className="fa fa-user-circle"></i> { user.firstName }
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" onClick={ () => logout() }>
-                    <i className="fa fa-sign-out"></i> Sign Out
-                  </Link>
-                </li>
-              </>
+            <>
+              <Link className={ classes.mainNavItem } to="/profile">
+                <i className="fa fa-user-circle"></i>
+                { user.firstName }
+              </Link>
+
+              <Link className={ classes.mainNavItem } to="/" onClick={ () => logout() }>
+                <i className="fa fa-sign-out"></i>
+                Sign Out
+              </Link>
+            </>
           )
         }
-      </ul>
+      </div>
     </nav>
   )
 }
