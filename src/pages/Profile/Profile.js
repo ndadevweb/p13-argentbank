@@ -8,6 +8,7 @@ import { authenticated } from '../../features/authSlice'
 import { getUser, getUserError, fetchUserProfile, updateUserProfile } from '../../features/userSlice'
 
 import classes from './Profile.module.css'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 /**
  * Component to display the user profile page
@@ -28,6 +29,8 @@ export default function Profile() {
   const isAuthenticated = useSelector(authenticated)
   const user = useSelector(getUser)
   const userError = useSelector(getUserError)
+
+  useDocumentTitle('Profile '+user.firstName+' - '+user.lastName)
 
   useEffect(() => {
     if(isAuthenticated === false) {

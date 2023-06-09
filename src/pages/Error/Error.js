@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "../../hooks/useDocumentTitle"
 
 /**
  * Component to display Error page
@@ -5,6 +6,7 @@
  * @returns <Error />
  */
 export default function Error() {
+  useDocumentTitle('Page not found')
 
   return (
     <div>
