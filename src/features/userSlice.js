@@ -86,6 +86,7 @@ const userSlice = createSlice({
     lastName: null,
     createdAt: null,
     updatedAt: null,
+    isEdit: false,
     isLoading: false,
     error: null
   },
@@ -97,8 +98,12 @@ const userSlice = createSlice({
       state.lastName = null
       state.createdAt = null
       state.updatedAt = null
+      state.isEdit = false
       state.isLoading = false
       state.error = null
+    },
+    clearEdit: (state) => {
+      state.isEdit = null
     }
   },
   extraReducers: (builder) => {
@@ -132,6 +137,8 @@ const userSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         const { id, email, firstName, lastName, createdAt, updatedAt } = action.payload
 
+        state.isEdit = updatedAt !== state.updatedAt
+
         state.id = id
         state.email = email
         state.firstName = firstName
@@ -143,7 +150,7 @@ const userSlice = createSlice({
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false
-        state.error = action.error.message
+        state.error = action.payload
       })
   }
 })
@@ -152,6 +159,6 @@ export const getUser = (state) => state.user
 
 export const getUserError = (state) => state.user.error
 
-export const { clearUser } = userSlice.actions
+export const { clearUser, clearEdit } = userSlice.actions
 
 export default userSlice.reducer

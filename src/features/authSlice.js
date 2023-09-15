@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+const URL_AUTH = 'http://localhost:3001/api/v1/user/login'
+
 /**
  * Handle authentication of an user
  */
 export const authenticate = createAsyncThunk(
   'auth/authenticate',
   async ( { login, password, rememberMe = false }, { rejectWithValue } ) => {
-    const url = 'http://localhost:3001/api/v1/user/login'
+    const url = URL_AUTH
 
     const config = {
       method: 'post',

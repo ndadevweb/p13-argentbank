@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { THEME_BG_DARK } from '../../components/Main/Main'
-import { Main, Accounts, Alert, Button } from '../../components/'
+import { Main, Accounts, Button, Alert } from '../../components/'
 
 import { authenticated } from '../../features/authSlice'
-import { getUser, getUserError, fetchUserProfile, updateUserProfile } from '../../features/userSlice'
+import { getUser, fetchUserProfile, updateUserProfile, getUserError, clearEdit } from '../../features/userSlice'
 
 import classes from './Profile.module.css'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -29,7 +29,7 @@ export default function Profile() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(authenticated)
   const user = useSelector(getUser)
-  const userError = useSelector(getUserError)
+  const error = useSelector(getUserError)
 
   useDocumentTitle('Profile '+user.firstName+' - '+user.lastName)
 
@@ -51,6 +51,7 @@ export default function Profile() {
    * Display / Edit form to edit user's informations
    */
   function handleEditActive() {
+    dispatch(clearEdit())
     setEditActive(isEditActive === false)
     setFirstName(user.firstName)
     setLastName(user.lastName)
@@ -75,14 +76,17 @@ export default function Profile() {
       default:
         return null
     }
+
+    return null
   }
 
   /**
    * Handle to Update user's informations
    */
   function handleEditUser() {
+    const isEdit = false
     const userDataToUpdate = {
-      firstName, lastName
+      firstName, lastName, isEdit
     }
 
     dispatch(updateUserProfile(userDataToUpdate))
@@ -126,7 +130,16 @@ export default function Profile() {
           isEditActive === false
             ? null
             : (
-              <form className={ classes.formEdit } onSubmit={ (event) => event.preventDefault() }>
+              <form className={ classes.formEdit } onSubmit={ (event) => event.preventDefault() } autoComplete='off'>
+
+                {
+                  user.isEdit === true ? (
+                    <Alert text="Your informations have been updated" type="success" customClass={classes.profileAlert} />
+                  ) : (user.error !== null) ? (
+                    <Alert text={error} type="error" customClass={classes.profileAlert} />
+                  ) : null
+                }
+
                 <input type="text" name="firstName" className={ classes.profileFirstName } value={ firstName } onInput={ (event) => handleFields(event) } />
                 <input type="text" name="lastName" className={ classes.profileLastName } value={ lastName } onInput={ (event) => handleFields(event) } />
 

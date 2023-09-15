@@ -79,7 +79,7 @@ export default function FormSignIn() {
       <h1>Sign In</h1>
       <form autoComplete="off" onSubmit={ handleSubmit }>
 
-        { error !== null ? <Alert text={ error } /> : null }
+        { error !== null ? <Alert text={ error } type="error" /> : null }
 
         <div className={ classes.inputWrapper }>
           <label htmlFor="username">Username</label>
