@@ -10,12 +10,12 @@ schemes:
   - https
   - http
 paths:
-  /user/{user_id}/transaction/month/current:
+  /user/{user_id}/transactions/month/current:
     get:
       tags:
         - Transaction Module
       summary: Retrieve a user's transactions for the current month
-      description: Retrieve all transactions for the current month, the user must be authenticated to fetch his transactions
+      description: Retrieve all transactions for the current month
       security:
         - Bearer: []
       parameters:
@@ -27,8 +27,9 @@ paths:
         - in: path
           name: user_id
           description: User ID
-          required: true
           type: integer
+          format: int64
+          required: true
       produces:
         - application/json
       responses:
@@ -60,13 +61,15 @@ paths:
         - in: path
           name: user_id
           description: User ID
-          required: true
           type: integer
+          format: int64
+          required: true
         - in: path
           name: transaction_id
           description: Transaction ID
           required: true
           type: string
+          format: uuid
       produces:
         - application/json
       responses:
@@ -76,6 +79,90 @@ paths:
             $ref: "#/definitions/TransactionDetailResponse"
         400:
           description: Invalid Params
+        404:
+          description: Transaction was not found
+        500:
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Transaction Module
+      summary: Update a transaction
+      description: Update the transaction and retrieve its informations
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: path
+          name: user_id
+          description: User ID
+          type: integer
+          format: int64
+          required: true
+        - in: path
+          name: transaction_id
+          description: Transaction ID
+          type: string
+          format: uuid
+          required: true
+        - in: body
+          name: body
+          description: Update transaction payload
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionUpdate"
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Transaction successfully updated
+          schema:
+            $ref: "#/definitions/TransactionCreateAndUpdateResponse"
+        400:
+          description: Invalid Fields
+        404:
+          description: Transaction was not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Transaction Module
+      summary: Delete a transaction
+      description: Delete a transaction by transaction ID and retrieve the transaction ID
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: path
+          name: user_id
+          description: User ID
+          type: integer
+          format: int64
+          required: true
+        - in: path
+          name: transaction_id
+          description: Transaction ID
+          type: string
+          format: uuid
+          required: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Transaction successfully deleted
+          schema:
+            $ref: "#/definitions/TransactionDeleteResponse"
+        400:
+          description: Invalid Field
         404:
           description: Transaction was not found
         500:
@@ -112,71 +199,6 @@ paths:
           description: Invalid Fields
         500:
           description: Internal Server Error
-    put:
-      tags:
-        - Transaction Module
-      summary: Update a transaction
-      description: Update the transaction BY ID and retrieve the transaction informations
-      security:
-        - Bearer: []
-      parameters:
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          type: string
-          required: true
-        - in: body
-          name: body
-          description: Update transaction payload
-          required: true
-          schema:
-            $ref: "#/definitions/TransactionUpdate"
-      produces:
-        - application/json
-      responses:
-        200:
-          description: Transaction successfully updated
-          schema:
-            $ref: "#/definitions/TransactionCreateAndUpdateResponse"
-        400:
-          description: Invalid Fields
-        404:
-          description: Transaction was not found
-        500:
-          description: Internal Server Error
-
-    delete:
-      tags:
-        - Transaction Module
-      summary: Delete a transaction
-      description: Delete a transaction by transaction ID and retrieve the transaction ID
-      security:
-        - Bearer: []
-      parameters:
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          type: string
-          required: true
-        - in: body
-          name: body
-          description: Update transaction payload
-          required: true
-          schema:
-            $ref: "#/definitions/TransactionDelete"
-      produces:
-        - application/json
-      responses:
-        200:
-          description: Transaction successfully deleted
-          schema:
-            $ref: "#/definitions/TransactionDeleteResponse"
-        400:
-          description: Invalid Field
-        404:
-          description: Transaction was not found
-        500:
-          description: Internal Server Error
 
 securityDefinitions:
   Bearer:
@@ -187,44 +209,47 @@ securityDefinitions:
 definitions:
   TransactionCreate:
     properties:
-      title:
+      description:
         type: string
-        description: Title of the transaction
-        example: Buy Phone
+        description: Description of the transaction
+        example: Golden Sun Bakery
+      category:
+        type: string
+        description: Category of the transaction
+        example: Food
+      type:
+        type: string
+        description: Description of the transaction
+        example: Electronic
       date:
         type: string
         description: Date of the transaction
-        example: "2023-06-06 11:00:00"
+        example: "2020-06-20 11:00:00"
       amount:
-        type: string
-        description: Amount about the transaction
-        example: 19,99€
+        type: integer
+        format: double
+        description: Amount of the transaction
+        example: 20.00
+    required:
+      - title
+      - category
+      - note
+      - date
+      - amount
 
   TransactionUpdate:
     properties:
-      transaction_id:
+      category:
         type: string
-        description: ID of the transaction
-        example: TR6G87FD84DSQ5GF654
-      title:
+        description: Category of the transaction
+        example: Food
+      note:
         type: string
-        description: Title of the transaction
-        example: Buy Phone
-      date:
-        type: string
-        description: Date of the transaction
-        example: "2023-06-06 11:00:00"
-      amount:
-        type: string
-        description: Amount about the transaction
-        example: 19,99€
-
-  TransactionDelete:
-    properties:
-      transaction_id:
-        type: string
-        description: ID of the transaction
-        example: TR6G87FD84DSQ5GF654
+        description: Note about the transaction
+        example: Restaurant
+    required:
+      - category
+      - note
 
   TransactionCurrentMonthResponse:
     type: array
@@ -233,20 +258,35 @@ definitions:
       properties:
         id:
           type: string
+          format: uuid
           description: ID of the transaction
-          example: TR6G87FD84DSQ5GF654
-        title:
+          example: b28a4890-4112-4076-a505-917c25ccc43f
+        description:
           type: string
           description: Description about the transaction
-          example: Phone bill
+          example: Golden Sun Bakery
+        category:
+          type: string
+          description: Category of the transaction
+          example: Food
+        note:
+          type: string
+          description: Note about the transaction
+          example: Restaurant
         date:
           type: string
           description: Date of the transaction
-          example: "2023-06-06 11:00:00"
+          example: "2020-06-20 11:00:00"
         amount:
-          type: string
-          description: Amount about the transaction
-          example: 19,99€
+          type: integer
+          format: double
+          description: Amount of the transaction
+          example: 20.00
+        balance:
+          type: integer
+          format: double
+          description: Balance of the transaction
+          example: 2097.79
         messageBalance:
           type: string
           description: Balance of the account
@@ -257,20 +297,44 @@ definitions:
     properties:
       id:
         type: string
+        format: uuid
         description: ID of the transaction
-        example: TR6G87FD84DSQ5GF654
-      title:
+        example: b28a4890-4112-4076-a505-917c25ccc43f
+      user_id:
+        type: integer
+        format: int64
+        description: User's ID of the account
+        example: 1
+      description:
         type: string
         description: Description about the transaction
-        example: Phone bill
+        example: Golden Sun Bakery
+      category:
+        type: string
+        description: Category of the transaction
+        example: Food
+      note:
+        type: string
+        description: Note about the transaction
+        example: Restaurant
+      type:
+        type: string
+        description: type of the transaction
+        example: Electronic
       date:
         type: string
         description: Date of the transaction
-        example: "2023-06-06 11:00:00"
+        example: "2020-06-20 11:00:00"
       amount:
-        type: string
-        description: Amount about the transaction
-        example: 19,99€
+        type: integer
+        format: double
+        description: Amount of the transaction
+        example: 20.00
+      balance:
+        type: integer
+        format: double
+        description: Balance of the transaction
+        example: 2097.79
       messageBalance:
         type: string
         description: Balance of the account
@@ -281,20 +345,39 @@ definitions:
     properties:
       id:
         type: string
+        format: uuid
         description: ID of the transaction
-        example: TR6G87FD84DSQ5GF654
-      title:
+        example: b28a4890-4112-4076-a505-917c25ccc43f
+      description:
         type: string
         description: Description about the transaction
-        example: Phone bill
+        example: Golden Sun Bakery
+      category:
+        type: string
+        description: Category of the transaction
+        example: Food
+      note:
+        type: string
+        description: Note about the transaction
+        example: Restaurant
+      type:
+        type: string
+        description: Type of the transaction
+        example: Electronic
       date:
         type: string
         description: Date of the transaction
-        example: "2023-06-06 11:00:00"
+        example: "2020-06-20 11:00:00"
       amount:
-        type: string
-        description: Amount about the transaction
-        example: 19,99€
+        type: number
+        format: double
+        description: Amount of the transaction
+        example: 20.00
+      balance:
+        type: number
+        format: double
+        description: Balance of the transaction
+        example: 2097.79
       messageBalance:
         type: string
         description: Balance of the account
@@ -305,5 +388,6 @@ definitions:
     properties:
       transaction_id:
         type: string
+        format: uuid
         description: ID of the transaction
-        example: TR6G87FD84DSQ5GF654
+        example: b28a4890-4112-4076-a505-917c25ccc43f
